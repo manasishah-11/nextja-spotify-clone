@@ -3,17 +3,32 @@
 import { TbPlaylist } from "react-icons/tb";
 import { AiOutlinePlus } from "react-icons/ai";
 
-// import { Song } from "@/types";
-// import useUploadModal from "@/hooks/useUploadModal";
+import { Song } from "@/types";
+import useUploadModal from "@/hooks/useUploadModal";
 import { useUser } from "@/hooks/useUser";
-// import useAuthModal from "@/hooks/useAuthModal";
+import useAuthModal from "@/hooks/useAuthModal";
 // import useSubscribeModal from "@/hooks/useSubscribeModal";
 // import useOnPlay from "@/hooks/useOnPlay";
 
-// import MediaItem from "./MediaItem";
+import MediaItem from "./MediaItem";
 
-function Library() {
-  const OnAddClick = () => {};
+interface LibraryProps {
+  songs: Song[];
+}
+
+function Library(props: LibraryProps) {
+  const { songs } = props;
+
+  const authModal = useAuthModal();
+  const uploadModal = useUploadModal();
+  const { user } = useUser();
+
+  const OnAddClick = () => {
+    if (!user) {
+      return authModal.onOpen();
+    }
+    return uploadModal.onOpen();
+  };
 
   return (
     <div className="flex flex-col">
@@ -28,7 +43,11 @@ function Library() {
           onClick={OnAddClick}
         />
       </div>
-      <div className="flex flex-col gap-y-2 px-3 mt-4"></div>
+      <div className="flex flex-col gap-y-2 px-3 mt-4">
+        {songs.map((item) => (
+          <MediaItem data={item} onClick={() => {}} />
+        ))}
+      </div>
     </div>
   );
 }
