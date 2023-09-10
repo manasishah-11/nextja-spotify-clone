@@ -11,7 +11,7 @@ import { BiSearch } from "react-icons/bi";
 
 import useAuthModal from "@/hooks/useAuthModal";
 import { useUser } from "@/hooks/useUser";
-// import usePlayer from "@/hooks/usePlayer";
+import usePlayer from "@/hooks/usePlayer";
 
 import Button from "./Button";
 
@@ -21,6 +21,7 @@ interface HeaderProps {
 }
 
 function Header(props: HeaderProps) {
+  const player = usePlayer();
   const authModal = useAuthModal();
   const router = useRouter();
 
@@ -29,7 +30,7 @@ function Header(props: HeaderProps) {
 
   const handleLogout = async () => {
     const { error } = await supabaseClient.auth.signOut();
-
+    player.reset();
     router.refresh();
 
     if (error) {
